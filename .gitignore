@@ -43,3 +43,11 @@ target/
 *.jar
 *.war
 *.db
+
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
