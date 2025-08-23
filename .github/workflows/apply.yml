@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configure AWS credentials for Terraform
+      # Configure AWS credentials for Terraform & ECR
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -44,49 +44,49 @@ jobs:
           nohup java -jar target/*.jar > app.log 2>&1 &
           sleep 20
           curl -v http://localhost:9090/ || true
-          
-          
-           # 🔥 Build & push Docker image to ECR
-      - name: Build, Tag, and Push image to ECR
+
+      # Get AWS account ID
+      - name: Get AWS Account ID
+        id: account
+        run: echo "account_id=$(aws sts get-caller-identity --query Account --output text)" >> $GITHUB_OUTPUT
+
+      # Login to ECR
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Build & Push Docker image
+      - name: Build, Tag, and Push Docker image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: springboot-sample
-          IMAGE_TAG: latest
+          AWS_ACCOUNT_ID: ${{ steps.account.outputs.account_id }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          echo "Using ECR_REGISTRY=$ECR_REGISTRY"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          
+          IMAGE_REPO="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/springboot-sample"
+          IMAGE_TAG="latest"
+          echo "Building image: $IMAGE_REPO:$IMAGE_TAG"
+          docker build -t $IMAGE_REPO:$IMAGE_TAG .
+          docker push $IMAGE_REPO:$IMAGE_TAG
 
+      # -----------------------
+      # Terraform steps
+      # -----------------------
 
-
-
-
-    # Set up Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.5
 
-      # Terraform Init
       - name: Terraform init
         run: terraform -chdir=infrastructure init
 
-      # Terraform Format Check
       - name: Terraform Fmt Check
         run: terraform -chdir=infrastructure fmt -check
 
-      # Terraform Validate
       - name: Terraform Validate
         run: terraform -chdir=infrastructure validate
 
-      # Terraform Plan
       - name: Terraform Plan
         run: terraform -chdir=infrastructure plan
-          
-          # Terraform Apply (auto approve)
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform -chdir=infrastructure apply -auto-approve
-
-
