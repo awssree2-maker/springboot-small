@@ -53,18 +53,18 @@ jobs:
 
       # Terraform Init
       - name: Terraform Init
-        run: terraform -chdir=infra Init
+        run: terraform -chdir=infrastructure Init
 
       # Terraform Format Check
       - name: Terraform Fmt Check
-        run: terraform -chdir=infra fmt -check
+        run: terraform -chdir=infrastructure fmt -check
 
       # Terraform Validate
       - name: Terraform Validate
-        run: terraform -chdir=infra validate
+        run: terraform -chdir=infrastructure validate
 
       # Terraform Plan
       - name: Terraform Plan
-        run: terraform -chdir=infra plan
+        run: terraform -chdir=infrastructure plan
 
 
