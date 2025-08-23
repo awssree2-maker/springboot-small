@@ -52,8 +52,8 @@ jobs:
           terraform_version: 1.9.5
 
       # Terraform Init
-      - name: Terraform Init
-        run: terraform -chdir=infrastructure Init
+      - name: Terraform init
+        run: terraform -chdir=infrastructure init
 
       # Terraform Format Check
       - name: Terraform Fmt Check
