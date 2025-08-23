@@ -44,6 +44,17 @@ jobs:
           nohup java -jar target/*.jar > app.log 2>&1 &
           sleep 20
           curl -v http://localhost:9090/ || true
+          
+
+      # 🔥 Build & push Docker image to ECR
+      - name: Build, Tag, and Push image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: springboot-sample
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # Set up Terraform
       - name: Setup Terraform
