@@ -38,7 +38,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      # Run the Spring Boot app (test)
+      # ✅ Optional sanity check (don’t fail if app doesn’t respond yet)
       - name: Run Spring Boot App
         run: |
           nohup java -jar target/*.jar > app.log 2>&1 &
@@ -54,6 +54,19 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      # Ensure ECR repo exists BEFORE build & push
+      - name: Ensure ECR repository exists
+        env:
+          AWS_ACCOUNT_ID: ${{ steps.account.outputs.account_id }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          aws ecr describe-repositories \
+            --repository-names springboot-sample \
+            --region $AWS_REGION || \
+          aws ecr create-repository \
+            --repository-name springboot-sample \
+            --region $AWS_REGION
+
       # Build & Push Docker image
       - name: Build, Tag, and Push Docker image
         env:
@@ -62,6 +75,7 @@ jobs:
         run: |
           IMAGE_REPO="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/springboot-sample"
           IMAGE_TAG="latest"
+
           echo "Building image: $IMAGE_REPO:$IMAGE_TAG"
           docker build -t $IMAGE_REPO:$IMAGE_TAG .
           docker push $IMAGE_REPO:$IMAGE_TAG
@@ -75,7 +89,6 @@ jobs:
         with:
           terraform_version: 1.9.5
 
-
       - name: Terraform init
         run: terraform -chdir=infrastructure init
 
@@ -88,6 +101,7 @@ jobs:
       - name: Terraform Plan
         run: terraform -chdir=infrastructure plan
 
+      # ✅ Only apply on push to main (not PRs)
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform -chdir=infrastructure apply -auto-approve
