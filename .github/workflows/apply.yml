@@ -45,18 +45,24 @@ jobs:
           sleep 20
           curl -v http://localhost:9090/ || true
           
-
-      # 🔥 Build & push Docker image to ECR
+          
+           # 🔥 Build & push Docker image to ECR
       - name: Build, Tag, and Push image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: springboot-sample
           IMAGE_TAG: latest
         run: |
+          echo "Using ECR_REGISTRY=$ECR_REGISTRY"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          
 
-      # Set up Terraform
+
+
+
+
+    # Set up Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
