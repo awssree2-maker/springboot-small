@@ -53,7 +53,7 @@ jobs:
 
       # Terraform Init
       - name: Terraform Init
-        run: terraform -chdir=infra init
+        run: terraform -chdir=infra Init
 
       # Terraform Format Check
       - name: Terraform Fmt Check
