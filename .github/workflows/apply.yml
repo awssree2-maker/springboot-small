@@ -54,18 +54,7 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      # Ensure ECR repo exists BEFORE build & push
-      - name: Ensure ECR repository exists
-        env:
-          AWS_ACCOUNT_ID: ${{ steps.account.outputs.account_id }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          aws ecr describe-repositories \
-            --repository-names springboot-sample \
-            --region $AWS_REGION || \
-          aws ecr create-repository \
-            --repository-name springboot-sample \
-            --region $AWS_REGION
+
 
       # Build & Push Docker image
       - name: Build, Tag, and Push Docker image
