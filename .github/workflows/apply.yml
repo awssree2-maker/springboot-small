@@ -56,19 +56,7 @@ jobs:
 
 
 
-      # Build & Push Docker image
-      - name: Build, Tag, and Push Docker image
-        env:
-          AWS_ACCOUNT_ID: ${{ steps.account.outputs.account_id }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          # Get repo name from TF variable
-          IMAGE_REPO="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}"
-          IMAGE_TAG="latest"
 
-          echo "Building image: $IMAGE_REPO:$IMAGE_TAG"
-          docker build -t $IMAGE_REPO:$IMAGE_TAG .
-          docker push $IMAGE_REPO:$IMAGE_TAG
 
       # -----------------------
       # Terraform steps
@@ -95,3 +83,26 @@ jobs:
       - name: Terraform Apply
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform -chdir=infrastructure apply -auto-approve
+
+
+
+          # -----------------------
+          # Docker build & push
+          # -----------------------
+      - name: Get AWS Account ID
+        id: account
+        run: echo "account_id=$(aws sts get-caller-identity --query Account --output text)" >> $GITHUB_OUTPUT
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, Tag, and Push Docker image
+        env:
+          AWS_ACCOUNT_ID: ${{ steps.account.outputs.account_id }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+           IMAGE_REPO="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}"
+           IMAGE_TAG="latest"
+           echo "Building image: $IMAGE_REPO:$IMAGE_TAG"
+           docker build -t $IMAGE_REPO:$IMAGE_TAG .
+           docker push $IMAGE_REPO:$IMAGE_TAG
