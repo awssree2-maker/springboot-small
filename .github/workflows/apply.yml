@@ -62,7 +62,8 @@ jobs:
           AWS_ACCOUNT_ID: ${{ steps.account.outputs.account_id }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          IMAGE_REPO="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/springboot-sample"
+          # Get repo name from TF variable
+          IMAGE_REPO="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}"
           IMAGE_TAG="latest"
 
           echo "Building image: $IMAGE_REPO:$IMAGE_TAG"
