@@ -62,27 +62,27 @@ resource "aws_security_group" "alb_sg" {
   }
 
 
-#     description = "HTTP"ZZZZZZ    vpc_id      = aws_vpc.main.id
+  #     description = "HTTP"ZZZZZZ    vpc_id      = aws_vpc.main.id
 
-    ingress {
-      description = "Allow HTTP (9090) from Internet"
-      from_port   = 9090
-      to_port     = 9090
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    egress {
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    tags = { Name = "${var.name_prefix}-alb-sg" }
+  ingress {
+    description = "Allow HTTP (9090) from Internet"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # ECS Task SG - Only allow from ALB to 9090
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${var.name_prefix}-alb-sg" }
+}
+
+# ECS Task SG - Only allow from ALB to 9090
 
 
 resource "aws_security_group" "task_sg" {
