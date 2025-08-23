@@ -7,7 +7,7 @@ terraform {
     }
   }
 }
-##bregion spewcific r
+##bregion spewcific ryyy
 provider "aws" {
   region = var.aws_region
 }
