@@ -61,22 +61,55 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+  ingress {
+    description = "HTTP"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+
+    egress {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = { Name = "${var.name_prefix}-alb-sg" }
   }
 
-  tags = { Name = "${var.name_prefix}-alb-sg" }
-}
+  # ALB SG - Internet can access ALB on 9090
+  }
+resource "aws_security_group" "alb_sg" {
+    name        = "${var.name_prefix}-alb-sg"
+    description = "ALB SG"
+    vpc_id      = aws_vpc.main.id
+
+    ingress {
+      description = "Allow HTTP (9090) from Internet"
+      from_port   = 9090
+      to_port     = 9090
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = { Name = "${var.name_prefix}-alb-sg" }
+  }
+
+  # ECS Task SG - Only allow from ALB to 9090
 
 resource "aws_security_group" "task_sg" {
   name        = "${var.name_prefix}-task-sg"
   description = "ECS task SG"
   vpc_id      = aws_vpc.main.id
 
-  # Only allow traffic from the ALB to the container port
   ingress {
     description     = "App traffic from ALB"
     from_port       = var.container_port
