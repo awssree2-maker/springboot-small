@@ -11,6 +11,6 @@ output "service_name" {
   value = aws_ecs_service.app.name
 }
 
-output "ecr_repository" {
-  value = aws_ecr_repository.app.name
-}
+# output "ecr_repository" {
+#   value = aws_ecr_repository.app.name
+# }
