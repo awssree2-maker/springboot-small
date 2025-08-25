@@ -12,7 +12,7 @@ COPY . .
 RUN mvn -q -B -DskipTests package
 
 # Expose Spring Boot app port (9090)
-EXPOSE 9090
+EXPOSE 8080
 
 # Multi stagte build dockerhg
 FROM eclipse-temurin:21-jre
