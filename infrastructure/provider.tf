@@ -13,7 +13,7 @@ provider "aws" {
 }
 # S3 bucket for Terraform state
 resource "aws_s3_bucket" "tf_state" {
-  bucket = var.bucket_name
+  bucket = "springsample-terraform-state-ap-south-1"
   tags   = var.tags
 
   lifecycle {

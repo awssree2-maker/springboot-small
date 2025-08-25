@@ -29,10 +29,10 @@ variable "desired_count" {
   type    = number
   default = 1
 }
-variable "bucket_name" {
-  description = "yourcompany-terraform-state-ap-south-1"
-  type        = string
-}
+# variable "bucket_name" {
+#   description = "yourcompany-terraform-state-ap-south-1"
+#   type        = string
+# }
 
 variable "dynamodb_table_name" {
   description = "DynamoDB table name for Terraform state locking"
