@@ -25,21 +25,21 @@ resource "aws_security_group" "ecs_sg" {
 
 
 resource "aws_ecs_task_definition" "task_definition" {
-  family                = var.cluster_service_task_name
-  network_mode          = "awsvpc"
-  memory                = "512"
+  family                   = var.cluster_service_task_name
+  network_mode             = "awsvpc"
+  memory                   = "512"
   requires_compatibilities = ["FARGATE"]
 
 
-  execution_role_arn    = var.execution_role_arn
+  execution_role_arn = var.execution_role_arn
 
 
   container_definitions = jsonencode([
     {
-      name      = "flask-api-container"
-      image     = var.image_id
-      cpu       = 256
-      memory    = 512
+      name   = "flask-api-container"
+      image  = var.image_id
+      cpu    = 256
+      memory = 512
       port_mappings = [
         {
           container_port = 5000
