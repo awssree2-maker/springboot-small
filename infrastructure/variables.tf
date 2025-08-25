@@ -37,10 +37,10 @@ variable "image_id" {
 }
 
 # Subnets in the VPC for ECS tasks
-variable "vpc_id_subnet_list" {
-  description = "List of subnet IDs in the VPC where ECS tasks should run"
-  type        = list(string)
-}
+# variable "vpc_id_subnet_list" {
+#   description = "List of subnet IDs in the VPC where ECS tasks should run"
+#   type        = list(string)
+# }
 
 ###execution role ARN for ECS
 variable "execution_role_arn" {
