@@ -53,7 +53,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   cpu                      = "256"
   requires_compatibilities = ["FARGATE"]
 
-  execution_role_arn = "arn:aws:iam::734842485697:role/ecsTaskExecutionRole"
+  execution_role_arn = var.execution_role_arn
 
   container_definitions = jsonencode([
     {
