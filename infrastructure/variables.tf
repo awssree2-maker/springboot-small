@@ -6,7 +6,7 @@ variable "aws_region" {
 
 
 
-# VPC where ECS will runn
+# VPC where ECS will runnn
 variable "vpc_id" {
   description = "The ID of the VPC where ECS resources will be deployed"
   type        = string
