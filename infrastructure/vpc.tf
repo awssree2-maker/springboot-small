@@ -66,8 +66,8 @@ resource "aws_security_group" "alb_sg" {
 
   ingress {
     description = "Allow HTTP (9090) from Internet"
-    from_port   = 9090
-    to_port     = 9090
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

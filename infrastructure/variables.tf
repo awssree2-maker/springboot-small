@@ -22,7 +22,7 @@ variable "public_subnet_cidrs" {
 
 variable "container_port" {
   type    = number
-  default = 9090
+  default = 8080
 }
 
 variable "desired_count" {
