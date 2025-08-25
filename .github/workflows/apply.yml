@@ -1,4 +1,4 @@
-name: Build Spring Boot & Terraform Check
+name: Build Spring Boot sample & Terraform Check
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  build-and-terraform:
+  build-and-terraform-aws-infra:
     runs-on: ubuntu-latest
 
     steps:
