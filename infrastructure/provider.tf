@@ -7,21 +7,22 @@ terraform {
     }
   }
 }
-##bregion spewcific ryyy
 provider "aws" {
-  region = var.aws_region
+  region = "ap-south-1"
 }
-# S3 bucket for Terraform state
+
 resource "aws_s3_bucket" "tf_state" {
   bucket = "springsample-terraform-state-ap-south-1"
-  tags   = var.tags
 
   lifecycle {
     prevent_destroy = true
   }
+
+  tags = {
+    Name = "Terraform State Bucket"
+  }
 }
 
-# Block all public access
 resource "aws_s3_bucket_public_access_block" "tf_state" {
   bucket                  = aws_s3_bucket.tf_state.id
   block_public_acls       = true
@@ -30,7 +31,6 @@ resource "aws_s3_bucket_public_access_block" "tf_state" {
   restrict_public_buckets = true
 }
 
-# Enable versioning (keeps history of state)
 resource "aws_s3_bucket_versioning" "tf_state" {
   bucket = aws_s3_bucket.tf_state.id
   versioning_configuration {
@@ -38,7 +38,6 @@ resource "aws_s3_bucket_versioning" "tf_state" {
   }
 }
 
-# Default encryption (SSE-S3). For KMS, change to SSE-KMS.
 resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state" {
   bucket = aws_s3_bucket.tf_state.id
   rule {
@@ -48,36 +47,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state" {
   }
 }
 
-# (Optional) Require TLS for access to the bucket
-data "aws_iam_policy_document" "require_tls" {
-  statement {
-    sid     = "DenyInsecureTransport"
-    effect  = "Deny"
-    actions = ["s3:*"]
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
-    resources = [
-      aws_s3_bucket.tf_state.arn,
-      "${aws_s3_bucket.tf_state.arn}/*"
-    ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values   = ["false"]
-    }
-  }
-}
-
-resource "aws_s3_bucket_policy" "require_tls" {
-  bucket = aws_s3_bucket.tf_state.id
-  policy = data.aws_iam_policy_document.require_tls.json
-}
-
-# DynamoDB table for state locking
 resource "aws_dynamodb_table" "tf_locks" {
-  name         = var.dynamodb_table_name
+  name         = "terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -85,8 +56,6 @@ resource "aws_dynamodb_table" "tf_locks" {
     name = "LockID"
     type = "S"
   }
-
-  tags = var.tags
 
   lifecycle {
     prevent_destroy = true
