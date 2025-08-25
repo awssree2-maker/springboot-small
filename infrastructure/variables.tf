@@ -30,7 +30,7 @@ variable "desired_count" {
   default = 1
 }
 variable "bucket_name" {
-  description = "Globally-unique S3 bucket name for Terraform state"
+  description = "Globally-unique S3 bucket Terraform state"
   type        = string
 }
 
