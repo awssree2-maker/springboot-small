@@ -50,29 +50,27 @@ resource "aws_ecs_task_definition" "task_definition" {
   family                   = var.cluster_service_task_name
   network_mode             = "awsvpc"
   memory                   = "512"
+  cpu                      = "256"
   requires_compatibilities = ["FARGATE"]
 
-
-  execution_role_arn = var.execution_role_arn
-
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
-      name   = "flask-api-container"
+      name   = "springboot-container"
       image  = var.image_id
       cpu    = 256
       memory = 512
-      port_mappings = [
+      portMappings = [
         {
-          container_port = 5000
-          host_port      = 5000
-          protocol       = "tcp"
+          containerPort = 8080 # use correct port for your Spring Boot app
+          hostPort      = 8080
+          protocol      = "tcp"
         }
       ]
+      essential = true
     }
   ])
-
-  cpu = "256"
 }
 
 
