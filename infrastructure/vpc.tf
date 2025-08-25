@@ -1,109 +1,73 @@
-resource "aws_vpc" "main" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-  tags                 = { Name = "${var.name_prefix}-vpc" }
+
+
+data "aws_vpc" "existing" {
+  id = var.vpc_id
 }
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id
-  tags   = { Name = "${var.name_prefix}-igw" }
-}
 
-resource "aws_subnet" "public_a" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs[0]
-  map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.available.names[0]
-  tags                    = { Name = "${var.name_prefix}-pub-a" }
-}
-
-resource "aws_subnet" "public_b" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs[1]
-  map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.available.names[1]
-  tags                    = { Name = "${var.name_prefix}-pub-b" }
-}
-
-data "aws_availability_zones" "available" {}
-
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-  tags = { Name = "${var.name_prefix}-rtb-public" }
-}
-
-resource "aws_route_table_association" "pub_a" {
-  subnet_id      = aws_subnet.public_a.id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "pub_b" {
-  subnet_id      = aws_subnet.public_b.id
-  route_table_id = aws_route_table.public.id
-}
-
-# Security groups
-resource "aws_security_group" "alb_sg" {
-  name        = "${var.name_prefix}-alb-sg"
-  description = "ALB SG"
-  vpc_id      = aws_vpc.main.id
-
+resource "aws_security_group" "ecs_sg" {
+  vpc_id = data.aws_vpc.existing.id
+  name   = "ecs-security-group"
+  # Inbound and outbound rules
   ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
+    from_port   = 5000
+    to_port     = 5000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-
-  #     description = "HTTP"ZZZZZZ    vpc_id      = aws_vpc.main.id
-
-  ingress {
-    description = "Allow HTTP (9090) from Internet"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = { Name = "${var.name_prefix}-alb-sg" }
 }
 
-# ECS Task SG - Only allow from ALB to 9090
+
+resource "aws_ecs_task_definition" "task_definition" {
+  family                = var.cluster_service_task_name
+  network_mode          = "awsvpc"
+  memory                = "512"
+  requires_compatibilities = ["FARGATE"]
 
 
-resource "aws_security_group" "task_sg" {
-  name        = "${var.name_prefix}-task-sg"
-  description = "ECS task SG"
-  vpc_id      = aws_vpc.main.id
+  execution_role_arn    = var.execution_role_arn
 
-  ingress {
-    description     = "App traffic from ALB"
-    from_port       = var.container_port
-    to_port         = var.container_port
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
+
+  container_definitions = jsonencode([
+    {
+      name      = "flask-api-container"
+      image     = var.image_id
+      cpu       = 256
+      memory    = 512
+      port_mappings = [
+        {
+          container_port = 5000
+          host_port      = 5000
+          protocol       = "tcp"
+        }
+      ]
+    }
+  ])
+
+  cpu = "256"
+}
+
+
+resource "aws_ecs_cluster" "ecs_cluster" {
+  name = var.cluster_name
+}
+
+resource "aws_ecs_service" "service" {
+  name            = var.cluster_service_name
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.task_definition.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = [var.vpc_id_subnet_list[0], var.vpc_id_subnet_list[1], var.vpc_id_subnet_list[2], var.vpc_id_subnet_list[3]]
+    security_groups  = [aws_security_group.ecs_sg.id]
+    assign_public_ip = true
   }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = { Name = "${var.name_prefix}-task-sg" }
 }

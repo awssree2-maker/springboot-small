@@ -4,35 +4,22 @@ variable "aws_region" {
   default     = "ap-south-1" # Mumbai (match your preference)
 }
 
-variable "name_prefix" {
-  description = "Name prefix for resources"
-  type        = string
-  default     = "springboot-sample"
-}
 
-variable "vpc_cidr" {
-  type    = string
-  default = "10.0.0.0/16"
-}
 
-variable "public_subnet_cidrs" {
-  type    = list(string)
-  default = ["10.0.1.0/24", "10.0.2.0/24"]
-}
+variable "vpc_id" {}
 
-variable "container_port" {
-  type    = number
-  default = 8080
-}
+variable "cluster_name" {}
 
-variable "desired_count" {
-  type    = number
-  default = 1
-}
-# variable "bucket_name" {
-#   description = "yourcompany-terraform-state-ap-south-1"
-#   type        = string
-# }
+variable "cluster_service_name" {}
+
+variable "cluster_service_task_name" {}
+
+variable "image_id" {}
+
+variable "vpc_id_subnet_list" {}
+
+variable "execution_role_arn" {}
+
 
 variable "dynamodb_table_name" {
   description = "DynamoDB table name for Terraform state locking"
