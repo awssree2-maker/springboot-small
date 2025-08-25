@@ -43,7 +43,7 @@ variable "dynamodb_table_name" {
 variable "tags" {
   description = "Common tags"
   type        = map(string)
-  default     = {
+  default = {
     Project = "terraform-state"
     Owner   = "devops"
   }
