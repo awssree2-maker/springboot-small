@@ -43,10 +43,10 @@ variable "vpc_id_subnet_list" {
 }
 
 # IAM execution role ARN for ECS
-# variable "execution_role_arn" {
-#   description = "ARN of the ECS execution role used to pull images and send logs"
-#   type        = string
-# }
+variable "execution_role_arn" {
+  description = "ARN of the ECS execution role used to pull images and send logs"
+  type        = string
+}
 
 
 variable "dynamodb_table_name" {
