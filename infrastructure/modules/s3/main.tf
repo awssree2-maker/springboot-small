@@ -1,10 +1,6 @@
 resource "aws_s3_bucket" "spring_bucket" {
   bucket = var.bucket_name
 
-  tags = {
-    Name        = var.bucket_name
-    Environment = "test"
-  }
 }
 
 resource "aws_s3_bucket_versioning" "this" {

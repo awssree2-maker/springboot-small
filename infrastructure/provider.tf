@@ -8,15 +8,15 @@ terraform {
   }
 }
 provider "aws" {
-  region = "ap-south-1"
+  region = var.aws_region
 }
 
-terraform {
-  backend "s3" {
-    bucket         = "spring-s3-bucket"   # same as locals
-    key            = "spring/terraform.tfstate"
-    region         = "ap-south-1"
-    dynamodb_table = "spring-dyanodb"
-    encrypt        = true
-  }
-}
+# terraform {
+#   backend "s3" {
+#     bucket         = "spring-s3-bucket"   # same as locals
+#     key            = "spring/terraform.tfstate"
+#     region         = "ap-south-1"
+#     dynamodb_table = "spring-dyanodb"
+#     encrypt        = true
+#   }
+# }
