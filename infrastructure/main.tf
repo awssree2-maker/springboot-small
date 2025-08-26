@@ -9,3 +9,7 @@ module "s3" {
   source      = "./modules/s3"
   bucket_name = local.bucket_name
 }
+module "dyanomdb" {
+  source     = "./modules/dyanmodb"
+  table_name = local.table_name
+}

@@ -1,20 +1,18 @@
-terraform {
-  required_version = ">= 1.0.0" # Ensure that the Terraform version is 1.0.0 or higher
+resource "aws_dynamodb_table" "my_table" {
+  name         = var.table_name
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
 
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws" # Specify the source of the AWS provider
-      version = "~> 4.0"        # Use a version of the AWS provider that is compatible with version
-    }
+  attribute {
+    name = "LockID"
+    type = "S"
   }
-}
 
-provider "aws" {
-  region = "us-east-1" # Set the AWS region to US East (N. Virginia)
-}
-
-resource "aws_instance" "aws_example" {
   tags = {
-    Name = "ExampleInstance" # Tag the instance with a Name tag for easier identification
+    Name        = var.table_name
+    Environment = "test"
   }
 }
+
+
+
