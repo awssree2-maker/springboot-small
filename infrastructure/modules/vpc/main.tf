@@ -11,7 +11,7 @@ resource "aws_vpc" "my_vpc" {
 resource "aws_subnet" "my_public" {
   count      = length(var.my_subnet_cidr)
   vpc_id     = aws_vpc.my_vpc.id
-  cidr_block = var.my_subnet_cidr
+  cidr_block = var.my_subnet_cidr[count.index]
 
 
   tags = {
@@ -22,7 +22,7 @@ resource "aws_subnet" "my_public" {
 resource "aws_subnet" "my_private" {
   count      = length(var.my_subnet_cidr)
   vpc_id     = aws_vpc.my_vpc.id
-  cidr_block = var.my_subnet_cidr_private
+  cidr_block = var.my_subnet_cidr_private[count.index]
 
 
   tags = {
