@@ -6,4 +6,5 @@ locals {
   bucket_name            = "spring-sfserdff-bucket"
   table_name             = "spring-dev-tfstate"
   my_igw                 = "my_igw_internet"
+
 }
