@@ -5,5 +5,4 @@ locals {
   my_subnet_cidr_private = ["10.0.3.0/24", "10.0.4.0/24"]
   bucket_name            = "spring-sfserdff-bucket"
   table_name             = "spring-dev-tfstate"
-  aws_region             = "ap-south-1"
 }
