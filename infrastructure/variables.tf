@@ -8,7 +8,7 @@ variable "aws_region" {
 
 # VPC
 variable "my_vpc" {
-  description = "spring=application"
+  description = "spring-application"
   type        = string
 }
 
