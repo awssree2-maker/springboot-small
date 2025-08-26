@@ -7,8 +7,8 @@ variable "aws_region" {
 
 
 # VPC
-# variable "my_vpc" {
-#   description = "The ID of the VPC where ECS resources will be deployed"
-#   type        = string
-# }
+variable "my_vpc" {
+  description = "spring=application"
+  type        = string
+}
 
