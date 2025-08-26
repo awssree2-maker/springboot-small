@@ -4,6 +4,7 @@ module "myvpc" {
   my_cidr                = local.my_cidr
   my_subnet_cidr         = local.my_subnet_cidr
   my_subnet_cidr_private = local.my_subnet_cidr_private
+  my_igw                 = local.my_igw
 }
 module "s3" {
   source      = "./modules/s3"

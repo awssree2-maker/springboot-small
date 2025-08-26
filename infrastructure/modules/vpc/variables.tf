@@ -16,3 +16,6 @@ variable "my_subnet_cidr" {
 variable "my_subnet_cidr_private" {
   type = list(string)
 }
+variable "my_igw" {
+  type = string
+}
