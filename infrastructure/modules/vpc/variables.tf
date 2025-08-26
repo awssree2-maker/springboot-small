@@ -10,3 +10,9 @@ variable "my_cidr" {
 variable "my_subnet_cidr" {
   type = list(string)
 }
+
+
+
+variable "my_subnet_cidr_private" {
+  type = list(string)
+}
