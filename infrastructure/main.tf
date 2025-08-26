@@ -5,3 +5,7 @@ module "myvpc" {
   my_subnet_cidr         = local.my_subnet_cidr
   my_subnet_cidr_private = local.my_subnet_cidr_private
 }
+module "s3" {
+  source      = "./modules/s3"
+  bucket_name = local.bucket_name
+}
