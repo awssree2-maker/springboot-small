@@ -23,6 +23,7 @@ module "my_vpc" {
   my_subnet_cidr         = local.my_subnet_cidr
   my_subnet_cidr_private = local.my_subnet_cidr_private
   my_igw                 = local.my_igw
+  azs                    = local.azs
 }
 module "s3" {
   source      = "./modules/s3"

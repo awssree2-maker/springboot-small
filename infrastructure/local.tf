@@ -3,6 +3,7 @@ locals {
   my_vpc                 = "spring-vpc"
   my_subnet_cidr         = ["10.0.1.0/24", "10.0.2.0/24"]
   my_subnet_cidr_private = ["10.0.3.0/24", "10.0.4.0/24"]
+  azs                    = ["ap-south-1a", "ap-south-1b"]
   bucket_name            = "spring-sfserdff-bucket"
   table_name             = "spring-dev-tfstate"
   my_igw                 = "my_igw_internet"

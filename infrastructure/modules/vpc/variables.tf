@@ -6,6 +6,9 @@ variable "my_vpc" {
 variable "my_cidr" {
   type = string
 }
+variable "azs" {
+  type = list(string)
+}
 
 variable "my_subnet_cidr" {
   type = list(string)

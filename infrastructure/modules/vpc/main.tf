@@ -11,6 +11,7 @@ resource "aws_vpc" "my_vpc" {
 resource "aws_subnet" "my_public" {
   count      = length(var.my_subnet_cidr)
   vpc_id     = aws_vpc.my_vpc.id
+  availability_zone = element(var.azs, count.index)
   cidr_block = var.my_subnet_cidr[count.index]
 
 
