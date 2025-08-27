@@ -10,4 +10,11 @@ locals {
   ingress_ports          = [80, 8080]
   allowed_cidr           = ["0.0.0.0/0"]
   alb_name               = "app-alb-new"
+  aws_region             = "ap-south-1"
+  cluster_name           = "my-ecs-fargate-cluster"
+  container_image        = "734842485697.dkr.ecr.ap-south-1.amazonaws.com/springboot-sample:latest"
+  container_port         = 80
+  task_cpu               = "256"
+  task_memory            = "512"
+  desired_count          = 2
 }

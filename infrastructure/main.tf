@@ -49,3 +49,17 @@ module "loadbalancer" {
   alb_name       = local.alb_name
   alb_sg_id      = module.loadbalancer.alb_sg_id
 }
+module "ecs" {
+  source           = "./modules/ecs"
+  alb_listener     = module.loadbalancer.alb_sg_id
+  aws_region       = local.aws_region
+  cluster_name     = local.cluster_name
+  container_image  = local.container_image
+  container_port   = local.container_port
+  desired_count    = local.desired_count
+  public_subnets   = module.my_vpc.my_public_subnet_ids
+  sg_id            = module.loadbalancer.alb_sg_id
+  target_group_arn = module.loadbalancer.alb_target_group_arn
+  task_cpu         = local.task_cpu
+  task_memory      = local.task_memory
+}
