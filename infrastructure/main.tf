@@ -26,7 +26,7 @@ module "loadbalancer" {
   source         = "./modules/loadbalancer"
   allowed_cidr   = local.allowed_cidr
   vpc_id         = module.my_vpc.vpc_id
-  public_subnets = local.my_subnet_cidr
+  public_subnets = module.my_vpc.my_public
   alb_name       = local.alb_name
   alb_sg_id      = module.loadbalancer.alb_sg_id
 }
