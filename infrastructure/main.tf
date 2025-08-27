@@ -21,3 +21,12 @@ module "sg" {
   allowed_cidr  = local.allowed_cidr
   vpc_id        = module.my_vpc.vpc_id
 }
+
+module "loadbalancer" {
+  source         = "./modules/loadbalancer"
+  allowed_cidr   = local.allowed_cidr
+  vpc_id         = module.my_vpc.vpc_id
+  public_subnets = local.my_subnet_cidr
+  alb_name       = local.alb_name
+  alb_sg_id      = module.loadbalancer.alb_sg_id
+}
