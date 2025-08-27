@@ -11,6 +11,13 @@ resource "aws_security_group" "alb_sg" {
     protocol    = "tcp"
     cidr_blocks = var.allowed_cidr
   }
+  ingress {
+    from_port   = var.listener_port
+    to_port     = var.listener_port
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidr
+  }
+
 
   # Allow all outbound
   egress {

@@ -21,6 +21,11 @@ variable "alb_listener_port" {
   type    = number
   default = 8080
 }
+variable "listener_port" {
+  type    = number
+  default = 80
+}
+
 
 variable "target_port" {
   type    = number
