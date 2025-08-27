@@ -1,3 +1,21 @@
+# Get caller identity (who is running Terraform)
+data "aws_caller_identity" "current" {}
+
+# Get region
+data "aws_region" "current" {}
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+
+output "caller_arn" {
+  value = data.aws_caller_identity.current.arn
+}
+
+output "region" {
+  value = data.aws_region.current.name
+}
+
 module "my_vpc" {
   source                 = "./modules/vpc"
   my_vpc                 = local.my_vpc
@@ -26,7 +44,7 @@ module "loadbalancer" {
   source         = "./modules/loadbalancer"
   allowed_cidr   = local.allowed_cidr
   vpc_id         = module.my_vpc.vpc_id
-  public_subnets = module.my_vpc.my_public[count.index]
+  public_subnets = module.my_vpc.my_public_subnet_ids
   alb_name       = local.alb_name
   alb_sg_id      = module.loadbalancer.alb_sg_id
 }
