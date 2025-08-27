@@ -14,3 +14,10 @@ module "dyanomdb" {
   source     = "./modules/dyanmodb"
   table_name = local.table_name
 }
+module "sg" {
+  source        = "./modules/sg"
+  name          = "application-newsg"
+  ingress_ports = local.ingress_ports
+  allowed_cidr  = local.allowed_cidr
+  vpc_id        = local.my_vpc
+}

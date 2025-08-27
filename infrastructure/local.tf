@@ -6,5 +6,6 @@ locals {
   bucket_name            = "spring-sfserdff-bucket"
   table_name             = "spring-dev-tfstate"
   my_igw                 = "my_igw_internet"
-
+  ingress_ports          = [80, 8080]
+  allowed_cidr           = ["0.0.0.0/0"] # or restrict later
 }
