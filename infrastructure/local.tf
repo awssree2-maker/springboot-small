@@ -8,5 +8,5 @@ locals {
   my_igw                 = "my_igw_internet"
   ingress_ports          = [80, 8080]
   allowed_cidr           = ["0.0.0.0/0"]
-  alb_name               = "app-alb"
+  alb_name               = "app-alb-new"
 }
