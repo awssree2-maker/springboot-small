@@ -19,5 +19,5 @@ module "sg" {
   name          = "application-newsg"
   ingress_ports = local.ingress_ports
   allowed_cidr  = local.allowed_cidr
-  vpc_id        = local.my_vpc
+  vpc_id        = module.myvpc
 }
