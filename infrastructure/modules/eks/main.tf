@@ -8,7 +8,7 @@ resource "aws_eks_cluster" "this" {
 
   version = "1.31"
   vpc_config {
-    endpoint_private_access = true
+    endpoint_private_access = false
     endpoint_public_access  = true
     subnet_ids              = concat(var.private_subnets, var.public_subnets)
   }

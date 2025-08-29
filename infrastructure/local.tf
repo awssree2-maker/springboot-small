@@ -20,5 +20,5 @@ locals {
   cluster_eks_name = "my-eks-cluster"
   node_min         = 1
   node_desired     = 2
-  node_max         = 4
+  node_max         = 3
 }
