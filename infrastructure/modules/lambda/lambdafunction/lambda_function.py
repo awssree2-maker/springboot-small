@@ -1,5 +1,6 @@
 import boto3
 import pandas as pd
+import numpy as pd
 import io
 
 s3 = boto3.client("s3")
