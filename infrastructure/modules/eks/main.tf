@@ -31,30 +31,7 @@ resource "aws_eks_node_group" "this" {
   }
 }
 
-provider "kubernetes" {
-  host                   = aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.example.token
-}
 
-data "aws_eks_cluster_auth" "example" {
-  name = aws_eks_cluster.this.name
-}
-
-resource "kubernetes_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-
-  data = {
-    mapRoles = yamlencode([{
-      rolearn  = aws_iam_role.my_eks_nodes_role.arn
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups   = ["system:bootstrappers", "system:nodes"]
-    }])
-  }
-}
 # EKS Addon: VPC CNI
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name  = aws_eks_cluster.this.name

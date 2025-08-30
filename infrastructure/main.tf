@@ -75,3 +75,7 @@ module "eks" {
   region           = local.aws_region
   vpc              = module.my_vpc.vpc_id
 }
+
+module "lambda" {
+  source = "./modules/lambda"
+}
