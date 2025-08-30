@@ -18,7 +18,7 @@ locals {
   task_memory      = "512"
   desired_count    = 2
   cluster_eks_name = "my-eks-cluster"
-  node_min         = 1
+  node_min         = 2
   node_desired     = 2
-  node_max         = 3
+  node_max         = 2
 }

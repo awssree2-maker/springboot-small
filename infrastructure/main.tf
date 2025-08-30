@@ -72,6 +72,6 @@ module "eks" {
   desired_size     = local.node_desired
   max_size         = local.node_max
   min_size         = local.node_min
-  private_subnets  = module.my_vpc.my_private_subnet_ids
   region           = local.aws_region
+  vpc              = module.my_vpc.vpc_id
 }
