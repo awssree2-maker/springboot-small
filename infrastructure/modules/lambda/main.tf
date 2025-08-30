@@ -14,7 +14,9 @@ resource "aws_lambda_function" "my_csv_to_parquet" {
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
-
+  layers = [
+    "arn:aws:lambda:ap-south-1:336392948345:layer:AWSSDKPandas-Python310:25"
+  ]
   timeout = 60
   memory_size = 512
 
